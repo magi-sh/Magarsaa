@@ -37,30 +37,6 @@ function shuffleArray(array) {
   }
 }
 
-function isSolvable(tilesArray, size) {
-  // Count inversions
-  const arr = tilesArray.filter(tile => tile !== null);
-  let inversions = 0;
-  for (let i = 0; i < arr.length - 1; i++) {
-    for (let j = i + 1; j < arr.length; j++) {
-      if (arr[i] > arr[j]) inversions++;
-    }
-  }
-
-  if (size % 2 === 1) {
-    // odd grid
-    return inversions % 2 === 0;
-  } else {
-    // even grid
-    const emptyRowFromBottom = size - Math.floor(tilesArray.indexOf(null) / size);
-    if (emptyRowFromBottom % 2 === 0) {
-      return inversions % 2 === 1;
-    } else {
-      return inversions % 2 === 0;
-    }
-  }
-}
-
 function renderGrid() {
   gameContainer.style.gridTemplateColumns = `repeat(${gridSize}, 80px)`;
   gameContainer.innerHTML = '';
@@ -102,7 +78,8 @@ function moveTile(row, col) {
     renderGrid();
 
     if (checkWin()) {
-      statusDiv.innerText = 'Congratulations! Moving to next level!';
+      statusDiv.innerText = 'Congratulations To Win this step! Moving to next level! again Congratulations!';
+      statusDiv.innerText = 'Message comes from magarsa shibiru '
       setTimeout(nextLevel, 1500);
     }
   }
@@ -116,16 +93,36 @@ function checkWin() {
 }
 
 function nextLevel() {
-  if (gridSize < 6) {
-    gridSize++;
-  } else {
+  gridSize++;
+  if (gridSize > 5) {
     alert("Congratulations!!! You have completed all levels!");
-    alert("Congratulations Again!!");
-    gridSize = 3; // Reset to initial level
+    alert("Congratulations Again!! Message comes from magarsa shibiru");
+    gridSize = 3; 
   }
   levelDiv.innerText = `Level: ${gridSize}x${gridSize}`;
   generatePuzzle(gridSize);
   statusDiv.innerText = '';
+}
+
+function isSolvable(tilesArray, size) {
+  const arr = tilesArray.filter(t => t !== null);
+  let inversions = 0;
+  for (let i = 0; i < arr.length - 1; i++) {
+    for (let j = i + 1; j < arr.length; j++) {
+      if (arr[i] > arr[j]) inversions++;
+    }
+  }
+
+  if (size % 2 === 1) {
+    return inversions % 2 === 0;
+  } else {
+    const blankRowFromBottom = size - emptyPos.row;
+    if (blankRowFromBottom % 2 === 0) {
+      return inversions % 2 === 1;
+    } else {
+      return inversions % 2 === 0;
+    }
+  }
 }
 
 restartBtn.addEventListener('click', () => {
@@ -133,5 +130,4 @@ restartBtn.addEventListener('click', () => {
   init();
 });
 
-// Initialize the game
 init();
